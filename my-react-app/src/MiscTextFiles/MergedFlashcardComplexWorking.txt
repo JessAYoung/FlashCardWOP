@@ -1,0 +1,114 @@
+import React from 'react';
+import { styled } from '@mui/material/styles';
+import Card from '@mui/material/Card';
+import CardHeader from '@mui/material/CardHeader';
+import CardMedia from '@mui/material/CardMedia';
+import CardContent from '@mui/material/CardContent';
+import CardActions from '@mui/material/CardActions';
+import Collapse from '@mui/material/Collapse';
+import IconButton, { IconButtonProps } from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import Button from '@mui/material/Button';
+
+let data = [
+  {
+    question: "Hi I am Question 1",
+    answerchoices: "",
+    answer: "",
+    reasoning: ""
+  },
+  {
+    question: "Hi I am Question 2",
+    answerchoices: "",
+    answer: "",
+    reasoning: ""
+  },
+  {
+    question: "Hi I am Question 3",
+    answerchoices: "",
+    answer: "",
+    reasoning: ""
+  },
+  {
+    question: "Hi I am Question 4",
+    answerchoices: "",
+    answer: "",
+    reasoning: ""
+  },
+  {
+    question: "Hi I am Question 5",
+    answerchoices: "",
+    answer: "",
+    reasoning: ""
+  },
+  {
+    question: "Hi I am Question 6",
+    answerchoices: "",
+    answer: "",
+    reasoning: ""
+  }
+];
+
+interface ExpandMoreProps extends IconButtonProps {
+  expand: boolean;
+}
+
+const ExpandMore = styled((props: ExpandMoreProps) => {
+  const { expand, ...other } = props;
+  return <IconButton {...other} />;
+})(({ theme, expand }) => ({
+  transform: !expand ? 'rotate(0deg)' : 'rotate(180deg)',
+  marginLeft: 'auto',
+  transition: theme.transitions.create('transform', {
+    duration: theme.transitions.duration.shortest,
+  }),
+}));
+
+function BasicCard({ card }) {
+  const [expanded, setExpanded] = React.useState(false);
+
+  const handleExpandClick = () => {
+    setExpanded(!expanded);
+  };
+
+  return (
+    <Card sx={{ maxWidth: 345 }}>
+      <CardHeader
+        title={card.question}
+      />
+      <CardActions disableSpacing>
+        <Button onClick={handleExpandClick} variant="outlined">
+          {expanded ? "Hide Answer" : "Show Answer"}
+        </Button>
+      </CardActions>
+      <Collapse in={expanded} timeout="auto" unmountOnExit>
+        <CardContent>
+          {/* Add your answer content here */}
+        </CardContent>
+      </Collapse>
+    </Card>
+  );
+}
+
+function App() {
+  const [cardIndex, setCardIndex] = React.useState(0)
+
+  return (
+    <div className="App">
+      <header className="App-header">
+        <BasicCard card={data[cardIndex]} />
+        <CardActions>
+          <Button onClick={() => setCardIndex(Math.max(cardIndex - 1, 0))} variant="outlined">
+            Prev Card
+          </Button>
+          <Button onClick={() => setCardIndex(Math.min(cardIndex + 1, data.length - 1))} variant="outlined">
+            Next Card
+          </Button>
+        </CardActions>
+      </header>
+    </div>
+  );
+}
+
+export default App;
