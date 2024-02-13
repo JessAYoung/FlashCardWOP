@@ -1,0 +1,103 @@
+import React from 'react';
+import { styled } from '@mui/material/styles';
+import Button from '@mui/material/Button';
+import Card from '@mui/material/Card';
+import CardActions from '@mui/material/CardActions';
+import CardContent from '@mui/material/CardContent';
+import CardHeader from '@mui/material/CardHeader';
+import Collapse from '@mui/material/Collapse';
+import IconButton, { IconButtonProps } from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import './App.css';
+
+// Combine the data arrays
+let data = [
+  // Assuming you want to merge and keep both sets of questions,
+  // adjust the properties to match and combine them accordingly.
+  {
+    question: "During which phase is the project team focused on defining detailed project tasks, timelines, and resource requirements?",
+    answerchoices: "A. Initiating B. Planning C. Executing D. Monitoring and Controlling\n",
+    answer: "B",
+    reasoning: "Detailed project tasks, timelines, and resource requirements are defined during the Planning phase."
+  },
+  {
+    question: "What is the primary purpose of the Project Scope Statement in the project development life cycle?",
+    answerchoices: "- A. Identify project stakeholders\n    - B. Define project objectives and goals\n    - C. Describe how project risks will be managed\n    - D. Establish the boundaries and deliverables of the project\n",
+    answer: "D",
+    reasoning: "The Project Scope Statement establishes the boundaries and deliverables of the project, defining what is included and excluded."
+  },
+  // Add the rest of the questions here...
+];
+
+interface ExpandMoreProps extends IconButtonProps {
+  expand: boolean;
+}
+
+const ExpandMore = styled((props: ExpandMoreProps) => {
+  const { expand, ...other } = props;
+  return <IconButton {...other} />;
+})(({ theme, expand }) => ({
+  transform: !expand ? 'rotate(0deg)' : 'rotate(180deg)',
+  marginLeft: 'auto',
+  transition: theme.transitions.create('transform', {
+    duration: theme.transitions.duration.shortest,
+  }),
+}));
+
+function BasicCard({ card, setCardIndex }) {
+  const [expanded, setExpanded] = React.useState(false);
+
+  const handleExpandClick = () => {
+    setExpanded(!expanded);
+  };
+
+  const handleNextCard = () => {
+    setCardIndex((prevIndex) => (prevIndex + 1) % data.length);
+  };
+
+  const handlePrevCard = () => {
+    setCardIndex((prevIndex) => (prevIndex - 1 + data.length) % data.length);
+  };
+
+  return (
+    <Card sx={{ maxWidth: 345, minWidth: 275 }}>
+      <CardHeader title={card.question} />
+      <CardContent>
+        {/* Dynamically display the content based on whether the answer is expanded or not */}
+        {expanded && (
+          <Typography variant="body2" color="text.secondary">
+            Answer: {card.answer}
+            <br />
+            Reasoning: {card.reasoning}
+          </Typography>
+        )}
+      </CardContent>
+      <CardActions disableSpacing>
+        <Button onClick={handleExpandClick} variant="outlined">
+          {expanded ? "Hide Answer" : "Show Answer"}
+        </Button>
+        <Button onClick={handlePrevCard} variant="outlined">
+          Prev Card
+        </Button>
+        <Button onClick={handleNextCard} variant="outlined">
+          Next Card
+        </Button>
+      </CardActions>
+    </Card>
+  );
+}
+
+function App() {
+  const [cardIndex, setCardIndex] = React.useState(0);
+
+  return (
+    <div className="App">
+      <header className="App-header">
+        <BasicCard card={data[cardIndex]} setCardIndex={setCardIndex} />
+      </header>
+    </div>
+  );
+}
+
+export default App;
