@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useRef  } from 'react';
 import { styled } from '@mui/material/styles';
 import { Button, Card, CardActions, CardContent, CardHeader, Checkbox, FormControl, FormControlLabel, FormGroup, FormHelperText, Typography } from '@mui/material';
 import './App.css';
+
 
 
 let data = [
@@ -118,96 +119,119 @@ let data = [
   ];
   
 
-function BasicCard({ card, setCardIndex }) {
-  const [expanded, setExpanded] = useState(false);
-  const [selectedAnswer, setSelectedAnswer] = useState('');
-  const [showFeedback, setShowFeedback] = useState(false);
-
-  const handleExpandClick = () => {
-    setExpanded(!expanded);
-  };
-
-  const handleAnswerChange = (event) => {
-    setSelectedAnswer(event.target.value);
-    setShowFeedback(false); // Reset feedback visibility when a new answer is selected
-  };
-
-  const handleSubmit = () => {
-    setShowFeedback(true); // Show feedback on submit
-  };
-
-  const isCorrect = selectedAnswer === card.correctanswer;
-
-  return (
-    <Card sx={{ maxWidth: 345, minWidth: 275 }}>
-      <CardHeader title={card.question} />
-      <CardContent>
-        <FormControl component="fieldset" variant="standard">
-          <FormGroup>
-            {card.answerchoices.map((choice, index) => (
-              <FormControlLabel
-                key={index}
-                control={
-                  <Checkbox
-                    checked={selectedAnswer === choice[0]} // Compare letter answer 
-                    onChange={handleAnswerChange}
-                    value={choice[0]}
-                  />
-                }
-                label={choice}
-              />
-            ))}
-          </FormGroup>
-          {showFeedback && (
-            <FormHelperText>
-              {isCorrect ? "Correct answer! 🎉" : "Incorrect answer. Try again! ❌"}
-            </FormHelperText>
-          )}
-        </FormControl>
-      </CardContent>
-      <CardActions disableSpacing>
-        <Button onClick={handleExpandClick} variant="outlined"> 
-          {expanded ? "Hide Answer" : "Show Answer"}
-        </Button>
-        <Button onClick={handleSubmit} variant="outlined">Check Answer</Button>
-      </CardActions>
-      {expanded && (
+  function shuffle(array) {
+    // Fisher-Yates shuffle algorithm
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+  }
+  
+  function BasicCard({ card, setCardIndex }) {
+    const [expanded, setExpanded] = useState(false);
+    const [selectedAnswer, setSelectedAnswer] = useState('');
+    const [showFeedback, setShowFeedback] = useState(false);
+  
+    const handleExpandClick = () => {
+      setExpanded(!expanded);
+    };
+  
+    const handleAnswerChange = (event) => {
+      setSelectedAnswer(event.target.value);
+      setShowFeedback(false); // Reset feedback visibility when a new answer is selected
+    };
+  
+    const handleSubmit = () => {
+      setShowFeedback(true); // Show feedback on submit
+    };
+  
+    const isCorrect = selectedAnswer === card.correctanswer;
+  
+    return (
+      <Card sx={{ maxWidth: 345, minWidth: 275 }}>
+        <CardHeader title={card.question} />
         <CardContent>
-          <Typography variant="body2" color="text.secondary">
-            Reasoning: {card.reasoning}
-          </Typography>
+          <FormControl component="fieldset" variant="standard">
+            <FormGroup>
+              {card.answerchoices.map((choice, index) => (
+                <FormControlLabel
+                  key={index}
+                  control={
+                    <Checkbox
+                      checked={selectedAnswer === choice[0]} // Compare letter answer 
+                      onChange={handleAnswerChange}
+                      value={choice[0]}
+                    />
+                  }
+                  label={choice}
+                />
+              ))}
+            </FormGroup>
+            {showFeedback && (
+              <FormHelperText>
+                {isCorrect ? "Correct answer! 🎉" : "Incorrect answer. Try again! ❌"}
+              </FormHelperText>
+            )}
+          </FormControl>
         </CardContent>
-      )}
-    </Card>
-  );
-}
-
-function App() {
-  const [cardIndex, setCardIndex] = React.useState(0);
-
-  const handleNext = () => {
-    setCardIndex((prevIndex) => (prevIndex + 1) % data.length); // Loop to the start 
-  };
-
-  const handlePrev = () => {
-    setCardIndex((prevIndex) => (prevIndex - 1 + data.length) % data.length); // Loop to the end 
-  };
-
-  return (
-    <div className="App">
-      <header className="App-header">
-        <BasicCard card={data[cardIndex]} setCardIndex={setCardIndex} />
-        <CardActions>
-          <Button onClick={handlePrev} variant="outlined">
-            Prev Card
+        <CardActions disableSpacing>
+          <Button onClick={handleExpandClick} variant="outlined"> 
+            {expanded ? "Hide Answer" : "Show Answer"}
           </Button>
-          <Button onClick={handleNext} variant="outlined">
-            Next Card
-          </Button>
+          <Button onClick={handleSubmit} variant="outlined">Check Answer</Button>
         </CardActions>
-      </header>
-    </div>
-  );
-}
-
-export default App;
+        {expanded && (
+          <CardContent>
+            <Typography variant="body2" color="text.secondary">
+              Reasoning: {card.reasoning}
+            </Typography>
+          </CardContent>
+        )}
+      </Card>
+    );
+  }
+  
+  function App() {
+    const [cardIndex, setCardIndex] = React.useState(0);
+    const [selectedAnswer, setSelectedAnswer] = useState('');
+    const [showFeedback, setShowFeedback] = useState(false);
+  
+    const handleNext = () => {
+      setCardIndex((prevIndex) => (prevIndex + 1) % data.length);
+      setSelectedAnswer(''); // Reset selected answer
+      setShowFeedback(false); // Hide feedback
+    };
+  
+    const handlePrev = () => {
+      setCardIndex((prevIndex) => (prevIndex - 1 + data.length) % data.length);
+      setSelectedAnswer(''); // Reset selected answer
+      setShowFeedback(false); // Hide feedback
+    };
+  
+    const handleRandomize = () => {
+      const randomIndex = Math.floor(Math.random() * data.length);
+      setCardIndex(randomIndex);
+      setSelectedAnswer(''); // Reset selected answer
+      setShowFeedback(false); // Hide feedback
+    };
+  
+    return (
+      <div className="App">
+        <header className="App-header">
+          <Button onClick={handleRandomize} variant="outlined" style={{ marginBottom: '1rem' }}>Randomize</Button>
+          <BasicCard card={data[cardIndex]} setCardIndex={setCardIndex} setSelectedAnswer={setSelectedAnswer} setShowFeedback={setShowFeedback} selectedAnswer={selectedAnswer} showFeedback={showFeedback} />
+          <CardActions>
+            <Button onClick={handlePrev} variant="outlined">
+              Prev Card
+            </Button>
+            <Button onClick={handleNext} variant="outlined">
+              Next Card
+            </Button>
+          </CardActions>
+        </header>
+      </div>
+    );
+  }
+  
+  export default App;
