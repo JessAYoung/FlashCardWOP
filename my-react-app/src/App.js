@@ -2,7 +2,7 @@ import React, { useState, useRef  } from 'react';
 import { styled } from '@mui/material/styles';
 import { Button, Card, CardActions, CardContent, CardHeader, Checkbox, FormControl, FormControlLabel, FormGroup, FormHelperText, Typography } from '@mui/material';
 import './App.css';
-
+import {Wheel} from 'https://cdn.jsdelivr.net/npm/spin-wheel@4.3.1/dist/spin-wheel-esm.js';
 
 
 let data = [
@@ -118,19 +118,10 @@ let data = [
     }
   ];
   
-
-  function shuffle(array) {
-    // Fisher-Yates shuffle algorithm
-    for (let i = array.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [array[i], array[j]] = [array[j], array[i]];
-    }
-    return array;
-  }
   
-  function BasicCard({ card, setCardIndex }) {
+  function BasicCard({ card, setCardIndex, selectedAnswer, setSelectedAnswer }) {
     const [expanded, setExpanded] = useState(false);
-    const [selectedAnswer, setSelectedAnswer] = useState('');
+    //const [selectedAnswer, setSelectedAnswer] = useState('');
     const [showFeedback, setShowFeedback] = useState(false);
   
     const handleExpandClick = () => {
