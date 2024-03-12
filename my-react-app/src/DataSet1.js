@@ -2,8 +2,7 @@ import React, { useState, useRef  } from 'react';
 import { styled } from '@mui/material/styles';
 import { Button, Card, CardActions, CardContent, CardHeader, Checkbox, FormControl, FormControlLabel, FormGroup, FormHelperText, Typography } from '@mui/material';
 import './App.css';
-import {Wheel} from 'https://cdn.jsdelivr.net/npm/spin-wheel@4.3.1/dist/spin-wheel-esm.js';
-
+import NavigationBar from './Navigation-Bar';
 
 let data = [
   {
@@ -210,6 +209,7 @@ let data = [
     return (
       <div className="App">
         <header className="App-header">
+          <NavigationBar/>
           <Button onClick={handleRandomize} variant="outlined" style={{ marginBottom: '1rem' }}>Randomize</Button>
           <BasicCard card={data[cardIndex]} setCardIndex={setCardIndex} setSelectedAnswer={setSelectedAnswer} setShowFeedback={setShowFeedback} selectedAnswer={selectedAnswer} showFeedback={showFeedback} />
           <CardActions>

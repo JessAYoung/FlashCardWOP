@@ -1,0 +1,4 @@
+What I want to accomplish to feel like my app is finished:
+1. Make a randomize wheel with catagories
+2. make catagories
+4. 
