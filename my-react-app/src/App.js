@@ -1,9 +1,15 @@
 import React, { useState, useRef  } from 'react';
 import { styled } from '@mui/material/styles';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'; // Import Routes instead of Switch
 import { Button, Card, CardActions, CardContent, CardHeader, Checkbox, FormControl, FormControlLabel, FormGroup, FormHelperText, Typography } from '@mui/material';
 import './App.css';
 import SpinningWheel from './SpinningWheel';
 import NavigationBar from './Navigation-Bar';
+import DataSet1 from './DataSet1'; // Ensure these imports are correct
+import DataSet2 from './DataSet2';
+import DataSet3 from './DataSet3';
+import DataSet4 from './DataSet4';
+import DataSet5 from './DataSet5';
 
 let data = [
   {
@@ -119,111 +125,22 @@ let data = [
   ];
   
   
-  function BasicCard({ card, setCardIndex, selectedAnswer, setSelectedAnswer }) {
-    const [expanded, setExpanded] = useState(false);
-    //const [selectedAnswer, setSelectedAnswer] = useState('');
-    const [showFeedback, setShowFeedback] = useState(false);
-  
-    const handleExpandClick = () => {
-      setExpanded(!expanded);
-    };
-  
-    const handleAnswerChange = (event) => {
-      setSelectedAnswer(event.target.value);
-      setShowFeedback(false); // Reset feedback visibility when a new answer is selected
-    };
-  
-    const handleSubmit = () => {
-      setShowFeedback(true); // Show feedback on submit
-    };
-  
-    const isCorrect = selectedAnswer === card.correctanswer;
-  
+  function App() { 
     return (
-      <Card sx={{ maxWidth: 345, minWidth: 275 }}>
-        <CardHeader title={card.question} />
-        <CardContent>
-          <FormControl component="fieldset" variant="standard">
-            <FormGroup>
-              {card.answerchoices.map((choice, index) => (
-                <FormControlLabel
-                  key={index}
-                  control={
-                    <Checkbox
-                      checked={selectedAnswer === choice[0]} // Compare letter answer 
-                      onChange={handleAnswerChange}
-                      value={choice[0]}
-                    />
-                  }
-                  label={choice}
-                />
-              ))}
-            </FormGroup>
-            {showFeedback && (
-              <FormHelperText>
-                {isCorrect ? "Correct answer! 🎉" : "Incorrect answer. Try again! ❌"}
-              </FormHelperText>
-            )}
-          </FormControl>
-        </CardContent>
-        <CardActions disableSpacing>
-          <Button onClick={handleExpandClick} variant="outlined"> 
-            {expanded ? "Hide Answer" : "Show Answer"}
-          </Button>
-          <Button onClick={handleSubmit} variant="outlined">Check Answer</Button>
-        </CardActions>
-        {expanded && (
-          <CardContent>
-            <Typography variant="body2" color="text.secondary">
-              Reasoning: {card.reasoning}
-            </Typography>
-          </CardContent>
-        )}
-      </Card>
-    );
-  }
-  
-  function App() {
-    const [cardIndex, setCardIndex] = React.useState(0);
-    const [selectedAnswer, setSelectedAnswer] = useState('');
-    const [showFeedback, setShowFeedback] = useState(false);
-  
-    const handleNext = () => {
-      setCardIndex((prevIndex) => (prevIndex + 1) % data.length);
-      setSelectedAnswer(''); // Reset selected answer
-      setShowFeedback(false); // Hide feedback
-    };
-  
-    const handlePrev = () => {
-      setCardIndex((prevIndex) => (prevIndex - 1 + data.length) % data.length);
-      setSelectedAnswer(''); // Reset selected answer
-      setShowFeedback(false); // Hide feedback
-    };
-  
-    const handleRandomize = () => {
-      const randomIndex = Math.floor(Math.random() * data.length);
-      setCardIndex(randomIndex);
-      setSelectedAnswer(''); // Reset selected answer
-      setShowFeedback(false); // Hide feedback
-    };
-  
-    return (
-      <div className="App">
-        <header className="App-header">
-          <NavigationBar/>
-          <SpinningWheel />
-          <Button onClick={handleRandomize} variant="outlined" style={{ marginBottom: '1rem' }}>Randomize</Button>
-          <BasicCard card={data[cardIndex]} setCardIndex={setCardIndex} setSelectedAnswer={setSelectedAnswer} setShowFeedback={setShowFeedback} selectedAnswer={selectedAnswer} showFeedback={showFeedback} />
-          <CardActions>
-            <Button onClick={handlePrev} variant="outlined">
-              Prev Card
-            </Button>
-            <Button onClick={handleNext} variant="outlined">
-              Next Card
-            </Button>
-          </CardActions>
-        </header>
-      </div>
+      <Router>
+        <div className="App">
+          <header className="App-header">
+            <NavigationBar />
+            <Routes>
+              <Route path="/DataSet1" element={<DataSet1 />} />
+              <Route path="/DataSet2" element={<DataSet2 />} />
+              <Route path="/DataSet3" element={<DataSet3 />} />
+              <Route path="/DataSet4" element={<DataSet4 />} />
+              <Route path="/DataSet5" element={<DataSet5 />} />
+            </Routes>
+          </header>
+        </div>
+      </Router>
     );
   }
   
